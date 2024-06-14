@@ -926,7 +926,7 @@ T.ColorOrder = colorOrder;
 % Rule: red-orange-yellow (descending), lightGray (unaltered), green-cyan-blue (ascending)
 for i = 1:height(T)
     if T.ColorOrder(i) <= 6 % For red-orange-yellow
-        T.DistanceOrder(i) = -T.Distance(i); % Negate to sort in descending order
+        T.DistanceOrder(i) = T.Distance(i); % Negate to sort in descending order
     elseif T.ColorOrder(i) == 7 % For lightGray
         T.DistanceOrder(i) = NaN; % Set NaN to exclude from sorting
     else % For green-cyan-blue
@@ -935,7 +935,7 @@ for i = 1:height(T)
 end
 
 % Sort the table by 'Source', 'Color', and 'Distance'
-[sortedT, sortOrder] = sortrows(T, {'ColorOrder', 'DistanceOrder'});
+[sortedT, sortOrder] = sortrows(T, {'SourceOrder', 'DistanceOrder'});
 
 % Retrieve the index post sorting
 sequence = sortedT.Index; % Final sorted sequence of the original index
