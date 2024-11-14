@@ -23,12 +23,12 @@ clear all
 % Load optimized parameters
 ParamsT = readtable("Features.xlsx",'VariableNamingRule','preserve');
 % unsupervisedslot = [(1:8) (13:23) (26:28) (37:40) (45:58)];
-unsupervisedslot = (1:38);
+% unsupervisedslot = (1:38);
 % log transformation
 % ParamsT{:,3:end} = log(ParamsT{:,3:end});
 
 % unsupervisedslot = [(1:8) (13:23) (26:40) (45:50)];
-ParamsT = ParamsT(:,unsupervisedslot);
+% ParamsT = ParamsT(:,unsupervisedslot);
 % check out std and delete the repeat ones
 [~,locs] = unique(round(table2array(mean(ParamsT(:,3:end))),4));
 locs = locs+2;
@@ -77,10 +77,10 @@ customColormap = [blueToWhite; whiteMiddle; whiteToRed];
 figure(11);clf;
 hm = heatmap(A);
 clim([-1 1]);
-Lable = {'C_S_A','C_S_V','C_P_A','C_P_V','G_S_A','G_P_A','G_t_S_A','G_t_P_A','kact_L_V','kact_R_V','kpas_L_V','kpas_R_V',...
-     'Vw_L_V','Vw_R_V','Vw_S_E_P','V_a_u','V_a_c','G_a','V4c','K_p_e_r_i','B_p_e_r_i','G_t_o','G_t_c','G_p_o','G_p_c','G_m_o','G_m_c','G_a_o','G_a_c','V_v_s'};
-hm.XDisplayLabels = Lable;
-hm.YDisplayLabels = Lable;
+% Lable = {'C_S_A','C_S_V','C_P_A','C_P_V','G_S_A','G_P_A','G_t_S_A','G_t_P_A','kact_L_V','kact_R_V','kpas_L_V','kpas_R_V',...
+%      'Vw_L_V','Vw_R_V','Vw_S_E_P','V_a_u','V_a_c','G_a','V4c','K_p_e_r_i','B_p_e_r_i','G_t_o','G_t_c','G_p_o','G_p_c','G_m_o','G_m_c','G_a_o','G_a_c','V_v_s'};
+% hm.XDisplayLabels = Lable;
+% hm.YDisplayLabels = Lable;
 hm.Colormap = customColormap;
 hm.CellLabelFormat = '%.2f';
 clim(hm, [-1 1]); 
@@ -89,76 +89,19 @@ clim(hm, [-1 1]);
 
 % if epcho unknow use comment code to calculate echo first
 x = ANorm_Optp';  
-optimalEpoch = 3000;
-% % Initialize variables
-% averageDistances = [];
-% slopeChanges = [];
-% 
-% % Define SOM network parameters
-% dimension1 = 10;
-% dimension2 = 10;
-% net = selforgmap([dimension1 dimension2]);
-% net.plotFcns = {'plotsomtop','plotsomnc','plotsomnd', ...
-%     'plotsomplanes', 'plotsomhits', 'plotsompos'};
-% 
-% % Range and step size of epochs
-% startEpoch = 0;
-% endEpoch = 5000;
-% stepEpoch = 100;
-% 
-% % Store the initial weights of the network
-% initialWeights = net.IW{1,1};
-% 
-% % Iterate and train the network
-% for epochs = startEpoch:stepEpoch:endEpoch
-%     % Manually set the training parameters
-%     net.trainParam.epochs = epochs;
-% 
-%     % Train the network
-%     rng('default');
-%     [net,~] = train(net, x);
-% 
-%     % Get the weights and calculate the average distance
-%     somMap = net.IW{1};
-%     averageDistance = calculateAverageDistance(x, somMap);
-%     averageDistances = [averageDistances averageDistance];
-% 
-%     % If at least two average distances have been calculated, compute the slope change
-%     if length(averageDistances) > 1
-%         slopeChange = averageDistances(end) - averageDistances(end-1);
-%         slopeChanges = [slopeChanges slopeChange];
-%     end
-% end
-% [~, locsoptimalEpoch] = min(averageDistances);  % This is the best result obtained after visualization.
-% 
-% % Plot the average distances to visualize the elbow point
-% figure;
-% epochsAxis = startEpoch:stepEpoch:endEpoch;
-% optimalEpoch = 400;
-% plot(epochsAxis, averageDistances);
-% xlabel('Epochs');
-% ylabel('Average Distance');
-% title('Average Distance Change with Epochs');
-% grid on;
-% hold on;
-% scatter(optimalEpoch, averageDistances(optimalEpoch/stepEpoch+1), 'r*');  % Mark the minimum value
-% legend('Average Distance', 'Optimal Epoch');
-% 
-% % Output the optimal epoch
-% disp(['Optimal epoch is: ' num2str(optimalEpoch)]);
-%
-rng('default')
-rng(64)
+optimalEpoch = 50000;
+
 % Create a Self-Organizing Map
 dimension1 = 10;
 dimension2 = 10;
-net = selforgmap([dimension1 dimension2]);
 
+net = selforgmap([dimension1 dimension2]);
 % Choose Plot Functions
 % For a list of all plot functions type: help nnplot
 net.plotFcns = {'plotsomtop','plotsomnc','plotsomnd', ...
     'plotsomplanes', 'plotsomhits', 'plotsompos'};
 net.trainParam.epochs = optimalEpoch;
+
 % Train the Network
 [net,tr] = train(net,x);
 

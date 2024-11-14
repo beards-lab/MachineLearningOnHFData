@@ -1,19 +1,25 @@
-function txt = myupdatefcn(~, event_obj, dataTbl, theta_final, rho_final)
-    % Get the cursor position on the plot
+function txt = myupdatefcn(~, event_obj, dataTbl, angles)
+    % Get the current cursor position
     pos = get(event_obj, 'Position');
-    [~, thetaIndx] = min(abs(theta_final - pos(1)));
-    [~, rhoIndx] = min(abs(rho_final - pos(2)));
+    x = pos(1);
+    y = pos(2);
+    z = pos(3);
 
-    % Check if the indices match to verify it's the correct point
-    if thetaIndx == rhoIndx
-        index = thetaIndx;
-    else
-        index = [];  % No exact match found
-    end
+    % Data point coordinates
+    xData = sum(cos(angles).*table2array(dataTbl(:, {'RD12', 'RD23', 'RD31'})), 2, 'omitnan');
+    yData = sum(sin(angles).*table2array(dataTbl(:, {'RD12', 'RD23', 'RD31'})), 2, 'omitnan');
+    zData = -log10(table2array(dataTbl(:, 'P')));
 
-    % Generate the text to display
-    if ~isempty(index)
-        txt = {[dataTbl.Properties.RowNames{index}]};
+    % Calculate the distance to the clicked point
+    distances = sqrt((xData - x).^2 + (yData - y).^2 + (zData - z).^2);
+
+    % Find the closest point
+    [minDistance, index] = min(distances);
+    threshold = 0.01; % Distance threshold for determining match
+
+    % If the minimum distance is less than the threshold, consider it a match
+    if minDistance < threshold
+        txt = dataTbl.Properties.RowNames{index};
     else
         txt = 'No match found';
     end
