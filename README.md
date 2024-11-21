@@ -19,5 +19,6 @@ This repository is primarily intended for peer review purposes, except for the *
      - **Training Process**: Training models on internal datasets.  
      - **Validation**: External validation using independent datasets.  
    - Provides scripts for data preprocessing, feature selection, and model evaluation.  
-   - Contains visualization functions for performance metrics, such as survival curves and feature importance plots.  
+   - Contains visualization functions for performance metrics, such as survival curves and feature importance plots.
+   - The trained RSF models are available at https://www.dropbox.com/scl/fo/wwosk8acw7jrxbvhwbdzr/AH5YLotEQkxGnJrD55wUHCk?rlkey=spgrv6yudjlet0sl6kyd3nfyo&st=vaxbzank&dl=0
 
